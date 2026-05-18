@@ -12,7 +12,7 @@
 :root {
   --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3348;
   --text: #e2e8f0; --muted: #8892a4; --accent: #4f7fff;
-  --red: #ef4444; --yellow: #f59e0b; --green: #22c55e;
+  --red: #ef4444; --yellow: #f59e0b; --green: #22c55e; --purple: #a78bfa;
 }
 body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; min-height: 100vh; }
 
@@ -29,16 +29,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Ap
 .input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
 .input-block { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px; }
 .input-block:last-child { margin-bottom: 0; }
-.block-label { font-size: 12px; font-weight: 700; color: var(--text); padding-bottom: 2px; min-width: 50px; align-self: flex-end; }
+.block-label { font-size: 12px; font-weight: 700; color: var(--text); min-width: 50px; align-self: flex-end; padding-bottom: 2px; }
 .input-group { display: flex; flex-direction: column; gap: 6px; }
 .input-group label { font-size: 11px; color: var(--muted); }
-.input-group input { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 8px 12px; border-radius: 8px; outline: none; width: 150px; }
+.input-group input[type=number],
+.input-group input[type=text] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 8px 12px; border-radius: 8px; outline: none; width: 150px; }
+.input-group input[type=text].wide { width: 340px; }
+.input-group input[type=date] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 8px 12px; border-radius: 8px; outline: none; width: 160px; color-scheme: dark; }
 .input-group input:focus { border-color: var(--accent); }
-.input-group input[type=date] { width: 160px; color-scheme: dark; }
 
 .time-btns { display: flex; gap: 8px; }
-.time-btn { padding: 8px 22px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.18s; }
+.time-btn { padding: 8px 18px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.18s; }
 .time-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.time-btn[data-t="0"].active { background: var(--purple); border-color: var(--purple); }
 
 .vdiv { width: 1px; height: 44px; background: var(--border); align-self: flex-end; margin: 0 4px; }
 
@@ -53,10 +56,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Ap
 .btn-danger:hover { background: rgba(239,68,68,0.22); }
 
 /* Summary */
+.summary-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.compare-btns { display: flex; gap: 6px; }
+.compare-btn { padding: 4px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.18s; }
+.compare-btn.active { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+
 .summary-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
 .s-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
 .s-lbl { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
 .s-val { font-size: 20px; font-weight: 700; }
+.s-delta { font-size: 11px; margin-top: 5px; font-weight: 600; }
+.s-delta.up { color: var(--green); }
+.s-delta.down { color: var(--red); }
+.s-delta.flat { color: var(--muted); }
 
 /* Graph */
 .graph-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
@@ -65,6 +77,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Ap
 .metric-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
 .metric-tab { padding: 5px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.18s; }
 .metric-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Tabs */
+.page-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.page-tab { padding: 10px 18px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.18s; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
 /* Table */
 .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
@@ -77,20 +97,31 @@ body { background: var(--bg); color: var(--text); font-family: 'Pretendard', 'Ap
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
 th { background: var(--surface2); color: var(--muted); font-weight: 600; padding: 10px 12px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
-th:first-child, th:nth-child(2) { text-align: center; }
+th:first-child, th:nth-child(2), th.center { text-align: center; }
 td { padding: 9px 12px; border-bottom: 1px solid rgba(46,51,72,0.4); text-align: right; white-space: nowrap; }
-td:first-child, td:nth-child(2) { text-align: center; }
+td:first-child, td:nth-child(2), td.center { text-align: center; }
+td.memo-cell { text-align: left; max-width: 180px; overflow: hidden; text-overflow: ellipsis; color: var(--muted); font-size: 11px; }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: rgba(255,255,255,0.02); }
 
 .badge-time { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
 .badge-12 { background: rgba(79,127,255,0.15); color: #6b9fff; }
 .badge-16 { background: rgba(245,158,11,0.15); color: var(--yellow); }
+.badge-0  { background: rgba(167,139,250,0.15); color: var(--purple); }
 
 .del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
 .del-btn:hover { color: var(--red); }
 
 .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; }
+
+/* 요일별 평균 */
+.dow-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 20px; }
+.dow-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; text-align: center; }
+.dow-name { font-size: 11px; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+.dow-roas { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.dow-sub { font-size: 10px; color: var(--muted); line-height: 1.6; }
+.dow-count { font-size: 10px; color: var(--border); margin-top: 6px; }
+.dow-chart-wrap { padding: 0 20px 20px; }
 </style>
 </head>
 <body>
@@ -103,10 +134,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
 <div class="main">
 
+  <!-- 입력 -->
   <div class="section-label">데이터 입력</div>
   <div class="input-card">
-
-    <!-- Row 1: 날짜 + 시간 -->
     <div class="input-block">
       <div class="input-group">
         <label>날짜</label>
@@ -117,11 +147,11 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <div class="time-btns">
           <button class="time-btn active" data-t="12" onclick="selectTime(this)">12시</button>
           <button class="time-btn" data-t="16" onclick="selectTime(this)">16시</button>
+          <button class="time-btn" data-t="0"  onclick="selectTime(this)">00시</button>
         </div>
       </div>
     </div>
 
-    <!-- Row 2: 매출 -->
     <div class="input-block">
       <span class="block-label">매출</span>
       <div class="input-group">
@@ -151,7 +181,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
     </div>
 
-    <!-- Row 3: 광고비 -->
     <div class="input-block">
       <span class="block-label">광고비</span>
       <div class="input-group">
@@ -168,6 +197,13 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
     </div>
 
+    <div class="input-block">
+      <span class="block-label">메모</span>
+      <div class="input-group">
+        <label>메모 (선택)</label>
+        <input type="text" id="inp-memo" class="wide" placeholder="예: 신소재 론칭, 메타 예산 증액 등">
+      </div>
+    </div>
   </div>
 
   <div class="action-row">
@@ -176,18 +212,25 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     <button class="btn btn-primary" onclick="saveRecord()">저장</button>
   </div>
 
-  <!-- Summary -->
-  <div class="section-label">최근 저장 기준</div>
+  <!-- 요약 -->
+  <div class="summary-header">
+    <span class="section-label" style="margin-bottom:0">최근 저장 기준</span>
+    <div class="compare-btns">
+      <button class="compare-btn active" data-mode="yesterday" onclick="setCompareMode(this)">어제 비교</button>
+      <button class="compare-btn" data-mode="lastweek" onclick="setCompareMode(this)">지난주 비교</button>
+      <button class="compare-btn" data-mode="none" onclick="setCompareMode(this)">비교 없음</button>
+    </div>
+  </div>
   <div class="summary-grid">
-    <div class="s-card"><div class="s-lbl">총 매출</div><div class="s-val" id="s-revenue">—</div></div>
-    <div class="s-card"><div class="s-lbl">총 광고비</div><div class="s-val" id="s-adspend">—</div></div>
-    <div class="s-card"><div class="s-lbl">ROAS</div><div class="s-val" id="s-roas">—</div></div>
-    <div class="s-card"><div class="s-lbl">CPA</div><div class="s-val" id="s-cpa">—</div></div>
-    <div class="s-card"><div class="s-lbl">객단가</div><div class="s-val" id="s-aov">—</div></div>
-    <div class="s-card"><div class="s-lbl">자사 비율</div><div class="s-val" id="s-selfrate">—</div></div>
+    <div class="s-card"><div class="s-lbl">총 매출</div><div class="s-val" id="s-revenue">—</div><div class="s-delta flat" id="d-revenue"></div></div>
+    <div class="s-card"><div class="s-lbl">총 광고비</div><div class="s-val" id="s-adspend">—</div><div class="s-delta flat" id="d-adspend"></div></div>
+    <div class="s-card"><div class="s-lbl">ROAS</div><div class="s-val" id="s-roas">—</div><div class="s-delta flat" id="d-roas"></div></div>
+    <div class="s-card"><div class="s-lbl">CPA</div><div class="s-val" id="s-cpa">—</div><div class="s-delta flat" id="d-cpa"></div></div>
+    <div class="s-card"><div class="s-lbl">객단가</div><div class="s-val" id="s-aov">—</div><div class="s-delta flat" id="d-aov"></div></div>
+    <div class="s-card"><div class="s-lbl">자사 비율</div><div class="s-val" id="s-selfrate">—</div><div class="s-delta flat" id="d-selfrate"></div></div>
   </div>
 
-  <!-- Graph -->
+  <!-- 그래프 -->
   <div class="graph-card">
     <div class="graph-header">
       <span class="graph-title">트렌드 그래프</span>
@@ -202,65 +245,87 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     <canvas id="trend-chart" height="75"></canvas>
   </div>
 
-  <!-- Table -->
+  <!-- 탭 -->
   <div class="table-card">
-    <div class="table-header">
-      <span class="table-title">리포트 기록</span>
-      <button class="btn btn-danger" onclick="clearAll()">전체 초기화</button>
+    <div class="page-tabs">
+      <div class="page-tab active" onclick="switchTab('records', this)">리포트 기록</div>
+      <div class="page-tab" onclick="switchTab('dow', this)">요일별 평균</div>
     </div>
-    <div class="filter-row">
-      <span class="filter-label">기간 필터</span>
-      <input type="date" class="filter-input" id="filter-from" onchange="renderTable(); renderChart();">
-      <span style="font-size:11px; color:var(--muted)">~</span>
-      <input type="date" class="filter-input" id="filter-to" onchange="renderTable(); renderChart();">
-      <button class="btn btn-ghost" style="padding:5px 14px; font-size:11px;" onclick="resetFilter()">초기화</button>
+
+    <!-- 리포트 기록 탭 -->
+    <div class="tab-panel active" id="tab-records">
+      <div class="table-header">
+        <span class="table-title">전체 기록</span>
+        <button class="btn btn-danger" onclick="clearAll()">전체 초기화</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">기간 필터</span>
+        <input type="date" class="filter-input" id="filter-from" onchange="renderTable(); renderChart();">
+        <span style="font-size:11px; color:var(--muted)">~</span>
+        <input type="date" class="filter-input" id="filter-to" onchange="renderTable(); renderChart();">
+        <button class="btn btn-ghost" style="padding:5px 14px; font-size:11px;" onclick="resetFilter()">초기화</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">날짜</th>
+              <th class="center">시간</th>
+              <th>총 매출</th>
+              <th>카페24</th>
+              <th>쿠팡</th>
+              <th>총 광고비</th>
+              <th>메타</th>
+              <th>구글</th>
+              <th>틱톡</th>
+              <th>주문건수</th>
+              <th>ROAS</th>
+              <th>CPA</th>
+              <th>객단가</th>
+              <th>자사율</th>
+              <th>메모</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="records-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="empty-state">저장된 리포트가 없습니다.</div>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>날짜</th>
-            <th>시간</th>
-            <th>총 매출</th>
-            <th>카페24</th>
-            <th>쿠팡</th>
-            <th>총 광고비</th>
-            <th>메타</th>
-            <th>구글</th>
-            <th>틱톡</th>
-            <th>주문건수</th>
-            <th>ROAS</th>
-            <th>CPA</th>
-            <th>객단가</th>
-            <th>자사율</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="records-tbody"></tbody>
-      </table>
-      <div class="empty-state" id="empty-state">저장된 리포트가 없습니다.</div>
+
+    <!-- 요일별 평균 탭 -->
+    <div class="tab-panel" id="tab-dow">
+      <div class="table-header">
+        <span class="table-title">요일별 평균 (전체 기록 기준)</span>
+      </div>
+      <div class="dow-grid" id="dow-grid"></div>
+      <div class="dow-chart-wrap">
+        <canvas id="dow-chart" height="60"></canvas>
+      </div>
+      <div class="empty-state" id="dow-empty" style="display:none">데이터가 부족합니다.</div>
     </div>
   </div>
 
 </div>
 
 <script>
-const STORE_KEY = 'hatke_realtime_v1';
+const STORE_KEY = 'hatke_realtime_v2';
 let records = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
 let currentMetric = 'roas';
+let compareMode = 'yesterday';
 let chart = null;
+let dowChart = null;
 
-// 헤더 시계
+// 시계
 function updateClock() {
   const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
+  const p = n => String(n).padStart(2, '0');
   document.getElementById('header-time').textContent =
-    `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}  ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    `${now.getFullYear()}.${p(now.getMonth()+1)}.${p(now.getDate())}  ${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
 }
 updateClock();
 setInterval(updateClock, 1000);
 
-// 오늘 날짜 기본값
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -276,31 +341,73 @@ function getSelectedTime() {
   return document.querySelector('.time-btn.active')?.dataset.t || '12';
 }
 
-function num(id) {
-  return parseFloat(document.getElementById(id).value) || 0;
+function setCompareMode(btn) {
+  compareMode = btn.dataset.mode;
+  document.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (records.length > 0) updateSummary(records[records.length - 1]);
 }
 
-function fmt(n) {
-  if (Math.abs(n) >= 100000000) return (n / 100000000).toFixed(1) + '억';
-  if (Math.abs(n) >= 10000) return Math.round(n / 10000) + '만';
-  return Math.round(n).toLocaleString();
-}
+function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
-function fmtWon(n) {
-  return Math.round(n).toLocaleString() + '원';
-}
+function fmt(n) { return Math.round(n).toLocaleString(); }
+function fmtWon(n) { return Math.round(n).toLocaleString() + '원'; }
 
 function calcMetrics(r) {
-  const cafe24Net = (r.cafe24Sales || 0) - (r.cafe24Refund || 0);
+  const cafe24Net  = (r.cafe24Sales || 0) - (r.cafe24Refund || 0);
   const coupangNet = (r.coupangSales || 0) - (r.coupangRefund || 0);
   const revenue = cafe24Net + coupangNet;
   const adspend = (r.meta || 0) + (r.google || 0) + (r.tiktok || 0);
-  const orders = (r.cafe24Orders || 0) + (r.coupangOrders || 0);
-  const roas = adspend > 0 ? revenue / adspend * 100 : 0;
-  const cpa = orders > 0 ? adspend / orders : 0;
-  const aov = orders > 0 ? revenue / orders : 0;
+  const orders  = (r.cafe24Orders || 0) + (r.coupangOrders || 0);
+  const roas     = adspend > 0 ? revenue / adspend * 100 : 0;
+  const cpa      = orders  > 0 ? adspend / orders : 0;
+  const aov      = orders  > 0 ? revenue / orders : 0;
   const selfRate = revenue > 0 ? cafe24Net / revenue * 100 : 0;
   return { revenue, adspend, orders, roas, cpa, aov, selfRate, cafe24Net, coupangNet };
+}
+
+function getComparisonRecord(date, time) {
+  if (compareMode === 'none') return null;
+  const d = new Date(date);
+  d.setDate(d.getDate() - (compareMode === 'yesterday' ? 1 : 7));
+  const cmpDate = d.toISOString().slice(0, 10);
+  return records.find(r => r.date === cmpDate && r.time === time) || null;
+}
+
+function deltaHTML(cur, prev, isPercent, lowerIsBetter) {
+  if (prev == null || prev === 0) return '';
+  const diff = cur - prev;
+  const pct  = (diff / Math.abs(prev)) * 100;
+  const up   = diff > 0;
+  const good = lowerIsBetter ? !up : up;
+  const cls  = Math.abs(pct) < 0.5 ? 'flat' : good ? 'up' : 'down';
+  const arrow = Math.abs(pct) < 0.5 ? '—' : up ? '▲' : '▼';
+  const label = compareMode === 'yesterday' ? '어제 동시간' : '지난주 동시간';
+  if (isPercent) return `<span class="${cls}">${arrow} ${Math.abs(pct).toFixed(1)}%p vs ${label}</span>`;
+  return `<span class="${cls}">${arrow} ${Math.abs(pct).toFixed(1)}% vs ${label}</span>`;
+}
+
+function updateSummary(rec) {
+  const m    = calcMetrics(rec);
+  const cmpR = getComparisonRecord(rec.date, rec.time);
+  const cmp  = cmpR ? calcMetrics(cmpR) : null;
+
+  document.getElementById('s-revenue').textContent  = fmt(m.revenue) + '원';
+  document.getElementById('s-adspend').textContent  = fmt(m.adspend) + '원';
+  document.getElementById('s-roas').textContent     = m.roas.toFixed(0) + '%';
+  document.getElementById('s-cpa').textContent      = fmt(m.cpa) + '원';
+  document.getElementById('s-aov').textContent      = fmt(m.aov) + '원';
+  document.getElementById('s-selfrate').textContent = m.selfRate.toFixed(1) + '%';
+
+  const roasEl = document.getElementById('s-roas');
+  roasEl.style.color = m.roas >= 300 ? 'var(--green)' : m.roas >= 150 ? 'var(--yellow)' : 'var(--red)';
+
+  document.getElementById('d-revenue').innerHTML  = cmp ? deltaHTML(m.revenue,  cmp.revenue,  false, false) : '';
+  document.getElementById('d-adspend').innerHTML  = cmp ? deltaHTML(m.adspend,  cmp.adspend,  false, true)  : '';
+  document.getElementById('d-roas').innerHTML     = cmp ? deltaHTML(m.roas,     cmp.roas,     true,  false) : '';
+  document.getElementById('d-cpa').innerHTML      = cmp ? deltaHTML(m.cpa,      cmp.cpa,      false, true)  : '';
+  document.getElementById('d-aov').innerHTML      = cmp ? deltaHTML(m.aov,      cmp.aov,      false, false) : '';
+  document.getElementById('d-selfrate').innerHTML = cmp ? deltaHTML(m.selfRate, cmp.selfRate, true,  false) : '';
 }
 
 function saveRecord() {
@@ -309,9 +416,7 @@ function saveRecord() {
   if (!date) { alert('날짜를 선택해주세요.'); return; }
 
   const rec = {
-    id: Date.now(),
-    date,
-    time,
+    id: Date.now(), date, time,
     cafe24Sales:   num('inp-cafe24-sales'),
     cafe24Orders:  num('inp-cafe24-orders'),
     cafe24Refund:  num('inp-cafe24-refund'),
@@ -321,6 +426,7 @@ function saveRecord() {
     meta:   num('inp-meta'),
     google: num('inp-google'),
     tiktok: num('inp-tiktok'),
+    memo: document.getElementById('inp-memo').value.trim(),
   };
 
   const idx = records.findIndex(r => r.date === date && r.time === time);
@@ -331,58 +437,45 @@ function saveRecord() {
     records.push(rec);
   }
 
-  records.sort((a, b) => (a.date + a.time) < (b.date + b.time) ? -1 : 1);
+  // 00시는 다음날 00시이므로 정렬 시 날짜+시간 문자열: 00 < 12 < 16 순서가 맞음
+  records.sort((a, b) => {
+    const ka = a.date + a.time.padStart(2, '0');
+    const kb = b.date + b.time.padStart(2, '0');
+    return ka < kb ? -1 : 1;
+  });
+
   saveStorage();
   updateSummary(rec);
   clearInputs();
   renderTable();
   renderChart();
+  renderDow();
 }
 
 function clearInputs() {
   ['inp-cafe24-sales','inp-cafe24-orders','inp-cafe24-refund',
    'inp-coupang-sales','inp-coupang-orders','inp-coupang-refund',
-   'inp-meta','inp-google','inp-tiktok'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
+   'inp-meta','inp-google','inp-tiktok'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('inp-memo').value = '';
 }
 
-function saveStorage() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(records));
-}
-
-function updateSummary(rec) {
-  const m = calcMetrics(rec);
-  document.getElementById('s-revenue').textContent  = fmt(m.revenue) + '원';
-  document.getElementById('s-adspend').textContent  = fmt(m.adspend) + '원';
-  document.getElementById('s-roas').textContent     = m.roas.toFixed(0) + '%';
-  document.getElementById('s-cpa').textContent      = fmt(m.cpa) + '원';
-  document.getElementById('s-aov').textContent      = fmt(m.aov) + '원';
-  document.getElementById('s-selfrate').textContent = m.selfRate.toFixed(1) + '%';
-
-  const roasEl = document.getElementById('s-roas');
-  roasEl.style.color = m.roas >= 300 ? 'var(--green)' : m.roas >= 150 ? 'var(--yellow)' : 'var(--red)';
-}
+function saveStorage() { localStorage.setItem(STORE_KEY, JSON.stringify(records)); }
 
 function deleteRecord(id) {
   if (!confirm('이 기록을 삭제하시겠습니까?')) return;
   records = records.filter(r => r.id !== id);
-  saveStorage();
-  renderTable();
-  renderChart();
+  saveStorage(); renderTable(); renderChart(); renderDow();
 }
 
 function clearAll() {
   if (!confirm('모든 기록을 삭제하시겠습니까?')) return;
-  records = [];
-  saveStorage();
-  renderTable();
-  renderChart();
+  records = []; saveStorage(); renderTable(); renderChart(); renderDow();
   ['s-revenue','s-adspend','s-roas','s-cpa','s-aov','s-selfrate'].forEach(id => {
     const el = document.getElementById(id);
-    el.textContent = '—';
-    el.style.color = '';
+    el.textContent = '—'; el.style.color = '';
   });
+  ['d-revenue','d-adspend','d-roas','d-cpa','d-aov','d-selfrate'].forEach(id =>
+    document.getElementById(id).innerHTML = '');
 }
 
 function getFilteredRecords() {
@@ -398,28 +491,31 @@ function getFilteredRecords() {
 function resetFilter() {
   document.getElementById('filter-from').value = '';
   document.getElementById('filter-to').value   = '';
-  renderTable();
-  renderChart();
+  renderTable(); renderChart();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.page-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'dow') renderDow();
 }
 
 function renderTable() {
-  const tbody  = document.getElementById('records-tbody');
+  const tbody   = document.getElementById('records-tbody');
   const emptyEl = document.getElementById('empty-state');
-  const data   = getFilteredRecords();
-
-  if (data.length === 0) {
-    tbody.innerHTML = '';
-    emptyEl.style.display = 'block';
-    return;
-  }
+  const data    = getFilteredRecords();
+  if (data.length === 0) { tbody.innerHTML = ''; emptyEl.style.display = 'block'; return; }
   emptyEl.style.display = 'none';
 
   tbody.innerHTML = [...data].reverse().map(r => {
     const m = calcMetrics(r);
     const roasColor = m.roas >= 300 ? 'var(--green)' : m.roas >= 150 ? 'var(--yellow)' : 'var(--red)';
+    const timeSlot  = r.time === '0' ? '0' : r.time;
     return `<tr>
-      <td>${r.date}</td>
-      <td><span class="badge-time badge-${r.time}">${r.time}시</span></td>
+      <td class="center">${r.date}</td>
+      <td class="center"><span class="badge-time badge-${timeSlot}">${r.time}시</span></td>
       <td>${fmtWon(m.revenue)}</td>
       <td>${fmtWon(m.cafe24Net)}</td>
       <td>${fmtWon(m.coupangNet)}</td>
@@ -432,6 +528,7 @@ function renderTable() {
       <td>${fmtWon(m.cpa)}</td>
       <td>${fmtWon(m.aov)}</td>
       <td>${m.selfRate.toFixed(1)}%</td>
+      <td class="memo-cell" title="${r.memo || ''}">${r.memo || ''}</td>
       <td><button class="del-btn" onclick="deleteRecord(${r.id})">✕</button></td>
     </tr>`;
   }).join('');
@@ -446,25 +543,23 @@ function switchMetric(metric, btn) {
 
 function renderChart() {
   const data = getFilteredRecords();
-
   const labels = data.map(r => {
     const parts = r.date.split('-');
     return `${parts[1]}/${parts[2]} ${r.time}시`;
   });
 
   const metricCfg = {
-    roas:    { label: 'ROAS (%)',  color: '#4f7fff', fn: r => calcMetrics(r).roas },
-    revenue: { label: '총매출',    color: '#22c55e', fn: r => calcMetrics(r).revenue },
-    adspend: { label: '광고비',    color: '#f59e0b', fn: r => calcMetrics(r).adspend },
-    cpa:     { label: 'CPA',       color: '#ef4444', fn: r => calcMetrics(r).cpa },
-    aov:     { label: '객단가',    color: '#a78bfa', fn: r => calcMetrics(r).aov },
+    roas:    { label: 'ROAS (%)', color: '#4f7fff', fn: r => calcMetrics(r).roas },
+    revenue: { label: '총매출',   color: '#22c55e', fn: r => calcMetrics(r).revenue },
+    adspend: { label: '광고비',   color: '#f59e0b', fn: r => calcMetrics(r).adspend },
+    cpa:     { label: 'CPA',      color: '#ef4444', fn: r => calcMetrics(r).cpa },
+    aov:     { label: '객단가',   color: '#a78bfa', fn: r => calcMetrics(r).aov },
   };
 
   const cfg = metricCfg[currentMetric];
   const values = data.map(cfg.fn);
 
   if (chart) { chart.destroy(); chart = null; }
-
   if (data.length === 0) return;
 
   const ctx = document.getElementById('trend-chart').getContext('2d');
@@ -473,39 +568,29 @@ function renderChart() {
     data: {
       labels,
       datasets: [{
-        label: cfg.label,
-        data: values,
-        borderColor: cfg.color,
-        backgroundColor: cfg.color + '18',
-        borderWidth: 2.5,
-        pointBackgroundColor: cfg.color,
-        pointBorderColor: '#1a1d27',
-        pointBorderWidth: 2,
-        pointRadius: 6,
-        pointHoverRadius: 8,
-        fill: true,
-        tension: 0.3,
+        label: cfg.label, data: values,
+        borderColor: cfg.color, backgroundColor: cfg.color + '18',
+        borderWidth: 2.5, pointBackgroundColor: cfg.color,
+        pointBorderColor: '#1a1d27', pointBorderWidth: 2,
+        pointRadius: 6, pointHoverRadius: 8,
+        fill: true, tension: 0.3,
       }]
     },
     options: {
       responsive: true,
       interaction: { intersect: false, mode: 'index' },
       plugins: {
-        legend: {
-          labels: { color: '#8892a4', font: { family: 'Pretendard', size: 12 } }
-        },
+        legend: { labels: { color: '#8892a4', font: { family: 'Pretendard', size: 12 } } },
         tooltip: {
-          backgroundColor: '#1a1d27',
-          borderColor: '#2e3348',
-          borderWidth: 1,
-          titleColor: '#e2e8f0',
-          bodyColor: '#8892a4',
-          padding: 10,
+          backgroundColor: '#1a1d27', borderColor: '#2e3348', borderWidth: 1,
+          titleColor: '#e2e8f0', bodyColor: '#8892a4', padding: 10,
           callbacks: {
             label: ctx => {
               const v = ctx.parsed.y;
-              if (currentMetric === 'roas') return `  ROAS: ${v.toFixed(0)}%`;
-              return `  ${cfg.label}: ${Math.round(v).toLocaleString()}원`;
+              const rec = data[ctx.dataIndex];
+              const memo = rec?.memo ? `  📝 ${rec.memo}` : '';
+              if (currentMetric === 'roas') return [`  ROAS: ${v.toFixed(0)}%`, memo].filter(Boolean);
+              return [`  ${cfg.label}: ${Math.round(v).toLocaleString()}원`, memo].filter(Boolean);
             }
           }
         }
@@ -518,8 +603,7 @@ function renderChart() {
         y: {
           grid: { color: 'rgba(46,51,72,0.6)' },
           ticks: {
-            color: '#8892a4',
-            font: { family: 'Pretendard', size: 11 },
+            color: '#8892a4', font: { family: 'Pretendard', size: 11 },
             callback: v => currentMetric === 'roas' ? v.toFixed(0) + '%' : Math.round(v / 10000) + '만'
           }
         }
@@ -528,10 +612,88 @@ function renderChart() {
   });
 }
 
+// 요일별 평균
+function renderDow() {
+  const DOW_NAMES = ['일', '월', '화', '수', '목', '금', '토'];
+  const buckets   = Array.from({ length: 7 }, () => ({ revenue: 0, adspend: 0, roas: 0, cpa: 0, aov: 0, count: 0 }));
+
+  records.forEach(r => {
+    const dow = new Date(r.date).getDay();
+    const m   = calcMetrics(r);
+    buckets[dow].revenue  += m.revenue;
+    buckets[dow].adspend  += m.adspend;
+    buckets[dow].roas     += m.roas;
+    buckets[dow].cpa      += m.cpa;
+    buckets[dow].aov      += m.aov;
+    buckets[dow].count    += 1;
+  });
+
+  const hasData = buckets.some(b => b.count > 0);
+  document.getElementById('dow-empty').style.display = hasData ? 'none' : 'block';
+
+  const grid = document.getElementById('dow-grid');
+  grid.innerHTML = DOW_NAMES.map((name, i) => {
+    const b = buckets[i];
+    if (b.count === 0) return `<div class="dow-card">
+      <div class="dow-name">${name}요일</div>
+      <div class="dow-roas" style="color:var(--muted)">—</div>
+      <div class="dow-count">기록 없음</div>
+    </div>`;
+    const avgRoas = b.roas / b.count;
+    const roasColor = avgRoas >= 300 ? 'var(--green)' : avgRoas >= 150 ? 'var(--yellow)' : 'var(--red)';
+    return `<div class="dow-card">
+      <div class="dow-name">${name}요일</div>
+      <div class="dow-roas" style="color:${roasColor}">${avgRoas.toFixed(0)}%</div>
+      <div class="dow-sub">
+        매출 ${fmt(b.revenue / b.count)}원<br>
+        광고비 ${fmt(b.adspend / b.count)}원<br>
+        객단가 ${fmt(b.aov / b.count)}원
+      </div>
+      <div class="dow-count">${b.count}건 평균</div>
+    </div>`;
+  }).join('');
+
+  if (dowChart) { dowChart.destroy(); dowChart = null; }
+  if (!hasData) return;
+
+  const avgRoas = buckets.map(b => b.count > 0 ? b.roas / b.count : null);
+  const colors  = avgRoas.map(v => v == null ? '#2e3348' : v >= 300 ? '#22c55e' : v >= 150 ? '#f59e0b' : '#ef4444');
+
+  const ctx2 = document.getElementById('dow-chart').getContext('2d');
+  dowChart = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: DOW_NAMES.map(n => n + '요일'),
+      datasets: [{
+        label: '평균 ROAS (%)',
+        data: avgRoas,
+        backgroundColor: colors.map(c => c + 'aa'),
+        borderColor: colors,
+        borderWidth: 1.5,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: '#8892a4', font: { family: 'Pretendard', size: 12 } } },
+        tooltip: {
+          backgroundColor: '#1a1d27', borderColor: '#2e3348', borderWidth: 1,
+          titleColor: '#e2e8f0', bodyColor: '#8892a4',
+          callbacks: { label: ctx => `  평균 ROAS: ${ctx.parsed.y?.toFixed(0)}%` }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(46,51,72,0.6)' }, ticks: { color: '#8892a4', font: { family: 'Pretendard' } } },
+        y: { grid: { color: 'rgba(46,51,72,0.6)' }, ticks: { color: '#8892a4', font: { family: 'Pretendard' }, callback: v => v + '%' } }
+      }
+    }
+  });
+}
+
 function captureReport() {
   html2canvas(document.querySelector('.main'), { backgroundColor: '#0f1117', scale: 2 }).then(canvas => {
     const a = document.createElement('a');
-    const d = new Date();
     a.download = `해트케_리포트_${today()}.png`;
     a.href = canvas.toDataURL('image/png');
     a.click();
@@ -542,24 +704,48 @@ function copyToSheet() {
   const data = getFilteredRecords();
   if (data.length === 0) { alert('복사할 데이터가 없습니다.'); return; }
 
-  const header = ['날짜','시간','총매출','카페24','쿠팡','총광고비','메타','구글','틱톡','주문건수','ROAS(%)','CPA','객단가','자사율(%)'];
-  const rows = data.map(r => {
-    const m = calcMetrics(r);
+  const DOW = ['일', '월', '화', '수', '목', '금', '토'];
+  const n = v => Math.round(v).toLocaleString();
+
+  const blocks = data.map(r => {
+    const m  = calcMetrics(r);
+    const d  = new Date(r.date);
+    const yy = String(d.getFullYear()).slice(2);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const dow = DOW[d.getDay()];
+    const hh  = r.time === '0' ? '00' : r.time;
+    const dateStr = `${yy}/${mm}/${dd} (${dow}) ${hh}:00`;
+
+    const selfPct  = Math.round(m.selfRate);
+    const otherPct = 100 - selfPct;
+    const memo = r.memo ? `\n📝 ${r.memo}` : '';
+
     return [
-      r.date, r.time + '시',
-      Math.round(m.revenue), Math.round(m.cafe24Net), Math.round(m.coupangNet),
-      Math.round(m.adspend), Math.round(r.meta), Math.round(r.google), Math.round(r.tiktok),
-      m.orders, m.roas.toFixed(1), Math.round(m.cpa), Math.round(m.aov), m.selfRate.toFixed(1)
-    ];
+      dateStr,
+      '',
+      `•    광고비 ${n(m.adspend)}`,
+      `\t◦    틱톡 ${n(r.tiktok)}`,
+      `\t◦    구글 ${n(r.google)}`,
+      `\t◦    메타 ${n(r.meta)}`,
+      '',
+      `•    매출 ${n(m.revenue)} / ${m.orders}`,
+      `\t◦    자사몰 ${n(m.cafe24Net)} / ${r.cafe24Orders}`,
+      `\t◦    쿠팡 ${n(m.coupangNet)} / ${r.coupangOrders}`,
+      '',
+      `•    ROAS ${m.roas.toFixed(0)}% / CPA ${n(m.cpa)}`,
+      `•    객단가 ${n(m.aov)}`,
+      `•    결제 비율 (자사몰 ${selfPct}% / 외 ${otherPct}%)`,
+      memo,
+    ].filter(line => line !== '').join('\n');
   });
 
-  const text = [header, ...rows].map(row => row.join('\t')).join('\n');
-  navigator.clipboard.writeText(text)
-    .then(() => alert('클립보드에 복사되었습니다.\n스프레드시트에 붙여넣기 하세요.'))
-    .catch(() => alert('복사에 실패했습니다. 브라우저 권한을 확인해주세요.'));
+  navigator.clipboard.writeText(blocks.join('\n\n'))
+    .then(() => alert('복사되었습니다.'))
+    .catch(() => alert('복사 실패. 브라우저 권한을 확인해주세요.'));
 }
 
-// 초기 렌더
+// 초기화
 renderTable();
 renderChart();
 if (records.length > 0) updateSummary(records[records.length - 1]);
