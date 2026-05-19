@@ -168,16 +168,29 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
       <div class="vdiv"></div>
       <div class="input-group">
-        <label>쿠팡 매출</label>
+        <label>쿠팡1 매출</label>
         <input type="number" id="inp-coupang-sales" placeholder="0">
       </div>
       <div class="input-group">
-        <label>쿠팡 주문건수</label>
+        <label>쿠팡1 주문건수</label>
         <input type="number" id="inp-coupang-orders" placeholder="0">
       </div>
       <div class="input-group">
-        <label>쿠팡 환불</label>
+        <label>쿠팡1 환불</label>
         <input type="number" id="inp-coupang-refund" placeholder="0">
+      </div>
+      <div class="vdiv"></div>
+      <div class="input-group">
+        <label>쿠팡2 매출</label>
+        <input type="number" id="inp-coupang2-sales" placeholder="0">
+      </div>
+      <div class="input-group">
+        <label>쿠팡2 주문건수</label>
+        <input type="number" id="inp-coupang2-orders" placeholder="0">
+      </div>
+      <div class="input-group">
+        <label>쿠팡2 환불</label>
+        <input type="number" id="inp-coupang2-refund" placeholder="0">
       </div>
     </div>
 
@@ -354,16 +367,18 @@ function fmt(n) { return Math.round(n).toLocaleString(); }
 function fmtWon(n) { return Math.round(n).toLocaleString() + '원'; }
 
 function calcMetrics(r) {
-  const cafe24Net  = (r.cafe24Sales || 0) - (r.cafe24Refund || 0);
-  const coupangNet = (r.coupangSales || 0) - (r.coupangRefund || 0);
+  const cafe24Net   = (r.cafe24Sales || 0) - (r.cafe24Refund || 0);
+  const coupang1Net = (r.coupangSales || 0) - (r.coupangRefund || 0);
+  const coupang2Net = (r.coupang2Sales || 0) - (r.coupang2Refund || 0);
+  const coupangNet  = coupang1Net + coupang2Net;
   const revenue = cafe24Net + coupangNet;
   const adspend = (r.meta || 0) + (r.google || 0) + (r.tiktok || 0);
-  const orders  = (r.cafe24Orders || 0) + (r.coupangOrders || 0);
+  const orders  = (r.cafe24Orders || 0) + (r.coupangOrders || 0) + (r.coupang2Orders || 0);
   const roas     = adspend > 0 ? revenue / adspend * 100 : 0;
   const cpa      = orders  > 0 ? adspend / orders : 0;
   const aov      = orders  > 0 ? revenue / orders : 0;
   const selfRate = revenue > 0 ? cafe24Net / revenue * 100 : 0;
-  return { revenue, adspend, orders, roas, cpa, aov, selfRate, cafe24Net, coupangNet };
+  return { revenue, adspend, orders, roas, cpa, aov, selfRate, cafe24Net, coupangNet, coupang1Net, coupang2Net };
 }
 
 function getComparisonRecord(date, time) {
@@ -420,9 +435,12 @@ function saveRecord() {
     cafe24Sales:   num('inp-cafe24-sales'),
     cafe24Orders:  num('inp-cafe24-orders'),
     cafe24Refund:  num('inp-cafe24-refund'),
-    coupangSales:  num('inp-coupang-sales'),
-    coupangOrders: num('inp-coupang-orders'),
-    coupangRefund: num('inp-coupang-refund'),
+    coupangSales:   num('inp-coupang-sales'),
+    coupangOrders:  num('inp-coupang-orders'),
+    coupangRefund:  num('inp-coupang-refund'),
+    coupang2Sales:  num('inp-coupang2-sales'),
+    coupang2Orders: num('inp-coupang2-orders'),
+    coupang2Refund: num('inp-coupang2-refund'),
     meta:   num('inp-meta'),
     google: num('inp-google'),
     tiktok: num('inp-tiktok'),
@@ -455,6 +473,7 @@ function saveRecord() {
 function clearInputs() {
   ['inp-cafe24-sales','inp-cafe24-orders','inp-cafe24-refund',
    'inp-coupang-sales','inp-coupang-orders','inp-coupang-refund',
+   'inp-coupang2-sales','inp-coupang2-orders','inp-coupang2-refund',
    'inp-meta','inp-google','inp-tiktok'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('inp-memo').value = '';
 }
@@ -731,7 +750,7 @@ function copyToSheet() {
       '',
       `•    매출 ${n(m.revenue)} / ${m.orders}`,
       `\t◦    자사몰 ${n(m.cafe24Net)} / ${r.cafe24Orders}`,
-      `\t◦    쿠팡 ${n(m.coupangNet)} / ${r.coupangOrders}`,
+      `\t◦    쿠팡 ${n(m.coupangNet)} / ${(r.coupangOrders || 0) + (r.coupang2Orders || 0)}`,
       '',
       `•    ROAS ${m.roas.toFixed(0)}% / CPA ${n(m.cpa)}`,
       `•    객단가 ${n(m.aov)}`,
