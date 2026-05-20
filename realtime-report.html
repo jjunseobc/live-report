@@ -127,6 +127,14 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .dow-sub { font-size: 10px; color: var(--muted); line-height: 1.6; }
 .dow-count { font-size: 10px; color: var(--border); margin-top: 6px; }
 .dow-chart-wrap { padding: 0 20px 20px; }
+
+/* 매출 채널 그룹 */
+.sales-groups { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.channel-group { border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; background: rgba(255,255,255,0.015); }
+.group-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.channel-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 10px; }
+.channel-row:last-child { margin-bottom: 0; }
+.channel-name { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 56px; align-self: flex-end; padding-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -157,49 +165,65 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
     </div>
 
-    <div class="input-block">
-      <span class="block-label">매출</span>
-      <div class="input-group">
-        <label>카페24 매출</label>
-        <input type="number" id="inp-cafe24-sales" placeholder="0">
-      </div>
-      <div class="input-group">
-        <label>카페24 주문건수</label>
-        <input type="number" id="inp-cafe24-orders" placeholder="0">
-      </div>
-      <div class="input-group">
-        <label>카페24 환불</label>
-        <input type="number" id="inp-cafe24-refund" placeholder="0">
-      </div>
-      <div class="vdiv"></div>
-      <div class="input-group">
-        <label>쿠팡1 매출</label>
-        <input type="number" id="inp-coupang-sales" placeholder="0">
-      </div>
-      <div class="input-group">
-        <label>쿠팡1 주문건수</label>
-        <input type="number" id="inp-coupang-orders" placeholder="0">
-      </div>
-      <div class="input-group">
-        <label>쿠팡1 환불</label>
-        <input type="number" id="inp-coupang-refund" placeholder="0">
-      </div>
-    </div>
+    <!-- 매출 그룹 -->
+    <div class="section-label" style="margin-bottom:10px">매출</div>
+    <div class="sales-groups">
 
-    <div class="input-block">
-      <span class="block-label" style="visibility:hidden">쿠팡2</span>
-      <div class="input-group">
-        <label>쿠팡2 매출</label>
-        <input type="number" id="inp-coupang2-sales" placeholder="0">
+      <!-- 자사몰 -->
+      <div class="channel-group">
+        <div class="group-title" style="color:var(--accent)">자사몰</div>
+        <div class="channel-row">
+          <span class="channel-name">카페24</span>
+          <div class="input-group">
+            <label>매출</label>
+            <input type="number" id="inp-cafe24-sales" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>주문건수</label>
+            <input type="number" id="inp-cafe24-orders" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>환불</label>
+            <input type="number" id="inp-cafe24-refund" placeholder="0">
+          </div>
+        </div>
       </div>
-      <div class="input-group">
-        <label>쿠팡2 주문건수</label>
-        <input type="number" id="inp-coupang2-orders" placeholder="0">
+
+      <!-- 쿠팡 -->
+      <div class="channel-group">
+        <div class="group-title" style="color:#ff6b35">쿠팡</div>
+        <div class="channel-row">
+          <span class="channel-name">쿠팡 1</span>
+          <div class="input-group">
+            <label>매출</label>
+            <input type="number" id="inp-coupang-sales" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>주문건수</label>
+            <input type="number" id="inp-coupang-orders" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>환불</label>
+            <input type="number" id="inp-coupang-refund" placeholder="0">
+          </div>
+        </div>
+        <div class="channel-row">
+          <span class="channel-name">쿠팡 2</span>
+          <div class="input-group">
+            <label>매출</label>
+            <input type="number" id="inp-coupang2-sales" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>주문건수</label>
+            <input type="number" id="inp-coupang2-orders" placeholder="0">
+          </div>
+          <div class="input-group">
+            <label>환불</label>
+            <input type="number" id="inp-coupang2-refund" placeholder="0">
+          </div>
+        </div>
       </div>
-      <div class="input-group">
-        <label>쿠팡2 환불</label>
-        <input type="number" id="inp-coupang2-refund" placeholder="0">
-      </div>
+
     </div>
 
     <div class="input-block">
