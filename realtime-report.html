@@ -442,7 +442,7 @@ function calcMetrics(r) {
   const roas     = adspend > 0 ? revenue / adspend * 100 : 0;
   const cpa      = orders  > 0 ? adspend / orders : 0;
   const aov      = orders  > 0 ? revenue / orders : 0;
-  const selfRate = revenue > 0 ? cafe24Net / revenue * 100 : 0;
+  const selfRate = orders > 0 ? (r.cafe24Orders || 0) / orders * 100 : 0;
   return { revenue, adspend, orders, roas, cpa, aov, selfRate, cafe24Net, coupangNet, coupang1Net, coupang2Net };
 }
 
