@@ -109,8 +109,14 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .badge-16   { background: rgba(245,158,11,0.15); color: var(--yellow); }
 .badge-final { background: rgba(34,197,94,0.15); color: var(--green); }
 
-.del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
-.del-btn:hover { color: var(--red); }
+.del-btn  { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
+.del-btn:hover  { color: var(--red); }
+.edit-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
+.edit-btn:hover { color: var(--accent); }
+
+.edit-banner { display: none; align-items: center; gap: 8px; background: rgba(79,127,255,0.08); border: 1px solid rgba(79,127,255,0.25); border-radius: 8px; padding: 8px 14px; margin-bottom: 16px; font-size: 12px; color: var(--accent); font-weight: 600; }
+.edit-banner-close { margin-left: auto; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 0 4px; }
+.edit-banner-close:hover { color: var(--text); }
 
 .time-filter-btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.18s; }
 .time-filter-btn.active { background: var(--surface); border-color: var(--accent); color: var(--accent); }
@@ -163,6 +169,12 @@ tr:hover td { background: rgba(255,255,255,0.02); }
           <button class="time-btn" data-t="0"  onclick="selectTime(this)">최종</button>
         </div>
       </div>
+    </div>
+
+    <!-- 수정 모드 배너 -->
+    <div class="edit-banner" id="edit-banner">
+      ✎ 수정 중 — <span id="edit-banner-label"></span>
+      <button class="edit-banner-close" onclick="cancelEdit()">✕ 취소</button>
     </div>
 
     <!-- 매출 그룹 -->
@@ -540,12 +552,57 @@ function saveRecord() {
   renderDow();
 }
 
+function editRecord(id) {
+  const r = records.find(rec => rec.id === id);
+  if (!r) return;
+
+  // 날짜 · 시간 설정
+  document.getElementById('inp-date').value = r.date;
+  document.querySelectorAll('.time-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === r.time);
+  });
+
+  // 매출 필드
+  document.getElementById('inp-cafe24-sales').value   = r.cafe24Sales   || '';
+  document.getElementById('inp-cafe24-orders').value  = r.cafe24Orders  || '';
+  document.getElementById('inp-cafe24-refund').value  = r.cafe24Refund  || '';
+  document.getElementById('inp-coupang-sales').value  = r.coupangSales  || '';
+  document.getElementById('inp-coupang-orders').value = r.coupangOrders || '';
+  document.getElementById('inp-coupang-refund').value = r.coupangRefund || '';
+  document.getElementById('inp-coupang2-sales').value  = r.coupang2Sales  || '';
+  document.getElementById('inp-coupang2-orders').value = r.coupang2Orders || '';
+  document.getElementById('inp-coupang2-refund').value = r.coupang2Refund || '';
+
+  // 광고비
+  document.getElementById('inp-meta').value   = r.meta   || '';
+  document.getElementById('inp-google').value = r.google || '';
+  document.getElementById('inp-tiktok').value = r.tiktok || '';
+
+  // 메모
+  document.getElementById('inp-memo').value = r.memo || '';
+
+  // 수정 배너 표시
+  const timeLabel = r.time === '0' ? '최종' : r.time + '시';
+  document.getElementById('edit-banner-label').textContent = `${r.date} ${timeLabel}`;
+  document.getElementById('edit-banner').style.display = 'flex';
+
+  // 입력 폼으로 스크롤
+  document.querySelector('.input-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() {
+  clearInputs();
+  document.getElementById('inp-date').value = today();
+  document.querySelectorAll('.time-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+}
+
 function clearInputs() {
   ['inp-cafe24-sales','inp-cafe24-orders','inp-cafe24-refund',
    'inp-coupang-sales','inp-coupang-orders','inp-coupang-refund',
    'inp-coupang2-sales','inp-coupang2-orders','inp-coupang2-refund',
    'inp-meta','inp-google','inp-tiktok'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('inp-memo').value = '';
+  document.getElementById('edit-banner').style.display = 'none';
 }
 
 function saveStorage() { localStorage.setItem(STORE_KEY, JSON.stringify(records)); }
@@ -651,7 +708,10 @@ function renderTable() {
       <td>${fmtWon(m.aov)}</td>
       <td>${m.selfRate.toFixed(1)}%</td>
       <td class="memo-cell" title="${r.memo || ''}">${r.memo || ''}</td>
-      <td><button class="del-btn" onclick="deleteRecord(${r.id})">✕</button></td>
+      <td style="white-space:nowrap">
+        <button class="edit-btn" onclick="editRecord(${r.id})" title="수정">✎</button>
+        <button class="del-btn"  onclick="deleteRecord(${r.id})" title="삭제">✕</button>
+      </td>
     </tr>`;
   }).join('');
 }
