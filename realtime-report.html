@@ -430,7 +430,7 @@ function loadProducts() {
   if (saved) {
     products = JSON.parse(saved);
   } else {
-    products = [{ id: 'default', name: '아크넨 패드', key: 'hatke_realtime_v2' }];
+    products = [{ id: 'default', name: '전체', key: 'hatke_realtime_v2' }];
     saveProducts();
   }
   currentProductId = products[0].id;
