@@ -429,6 +429,9 @@ function loadProducts() {
   const saved = localStorage.getItem(PRODUCTS_KEY);
   if (saved) {
     products = JSON.parse(saved);
+    // 기존 '아크넨 패드' 기본 제품명을 '전체'로 마이그레이션
+    const def = products.find(p => p.id === 'default' && p.name === '아크넨 패드');
+    if (def) { def.name = '전체'; saveProducts(); }
   } else {
     products = [{ id: 'default', name: '전체', key: 'hatke_realtime_v2' }];
     saveProducts();
