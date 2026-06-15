@@ -134,6 +134,32 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .dow-count { font-size: 10px; color: var(--border); margin-top: 6px; }
 .dow-chart-wrap { padding: 0 20px 20px; }
 
+/* 제품 탭 */
+.product-tabs-wrap { margin-bottom: 20px; }
+.product-tabs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.product-tab {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--surface2);
+  color: var(--muted); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.product-tab:hover { border-color: var(--accent); color: var(--text); }
+.product-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.product-tab-del {
+  background: none; border: none; color: inherit; opacity: 0.55;
+  font-size: 12px; cursor: pointer; padding: 0; line-height: 1;
+  display: flex; align-items: center;
+}
+.product-tab-del:hover { opacity: 1; }
+.product-add-btn {
+  padding: 8px 16px; border-radius: 8px;
+  border: 1.5px dashed var(--border); background: transparent;
+  color: var(--muted); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.product-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
 /* 매출 채널 그룹 */
 .sales-groups { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .channel-group { border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; background: rgba(255,255,255,0.015); }
@@ -152,6 +178,12 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </div>
 
 <div class="main">
+
+  <!-- 제품 선택 -->
+  <div class="product-tabs-wrap">
+    <div class="section-label">제품</div>
+    <div class="product-tabs" id="product-tabs"></div>
+  </div>
 
   <!-- 입력 -->
   <div class="section-label">데이터 입력</div>
@@ -388,8 +420,77 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </div>
 
 <script>
-const STORE_KEY = 'hatke_realtime_v2';
-let records = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+// ──── 제품 관리 ────
+const PRODUCTS_KEY = 'hatke_products_v1';
+let products = [];
+let currentProductId = null;
+
+function loadProducts() {
+  const saved = localStorage.getItem(PRODUCTS_KEY);
+  if (saved) {
+    products = JSON.parse(saved);
+  } else {
+    products = [{ id: 'default', name: '아크넨 패드', key: 'hatke_realtime_v2' }];
+    saveProducts();
+  }
+  currentProductId = products[0].id;
+}
+
+function saveProducts() {
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+}
+
+function getStoreKey() {
+  const p = products.find(p => p.id === currentProductId);
+  return p ? p.key : 'hatke_realtime_v2';
+}
+
+function renderProductTabs() {
+  const container = document.getElementById('product-tabs');
+  container.innerHTML = products.map(p => `
+    <div class="product-tab ${p.id === currentProductId ? 'active' : ''}" onclick="switchProduct('${p.id}')">
+      ${p.name}
+      ${products.length > 1 ? `<button class="product-tab-del" onclick="deleteProduct(event,'${p.id}')">✕</button>` : ''}
+    </div>
+  `).join('') + `<button class="product-add-btn" onclick="addProduct()">+ 제품 추가</button>`;
+}
+
+function switchProduct(id) {
+  currentProductId = id;
+  records = JSON.parse(localStorage.getItem(getStoreKey()) || '[]');
+  clearInputs();
+  resetSummary();
+  renderProductTabs();
+  renderTable();
+  renderChart();
+  renderDow();
+  if (records.length > 0) updateSummary(records[records.length - 1]);
+}
+
+function addProduct() {
+  const name = prompt('제품명을 입력하세요:');
+  if (!name || !name.trim()) return;
+  const id  = 'prod_' + Date.now();
+  const key = 'hatke_product_' + id + '_v1';
+  products.push({ id, name: name.trim(), key });
+  saveProducts();
+  switchProduct(id);
+}
+
+function deleteProduct(e, id) {
+  e.stopPropagation();
+  const p = products.find(p => p.id === id);
+  if (!p) return;
+  if (!confirm(`"${p.name}" 제품과 모든 데이터를 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`)) return;
+  localStorage.removeItem(p.key);
+  products = products.filter(pr => pr.id !== id);
+  saveProducts();
+  if (currentProductId === id) currentProductId = products[0].id;
+  switchProduct(currentProductId);
+}
+
+// ──────────────────────────────────
+let records = [];
 let currentMetric = 'revenue';
 let dowMetric = 'roas';
 let dowPeriod = 'all';
@@ -605,7 +706,7 @@ function clearInputs() {
   document.getElementById('edit-banner').style.display = 'none';
 }
 
-function saveStorage() { localStorage.setItem(STORE_KEY, JSON.stringify(records)); }
+function saveStorage() { localStorage.setItem(getStoreKey(), JSON.stringify(records)); }
 
 function deleteRecord(id) {
   if (!confirm('이 기록을 삭제하시겠습니까?')) return;
@@ -613,15 +714,19 @@ function deleteRecord(id) {
   saveStorage(); renderTable(); renderChart(); renderDow();
 }
 
-function clearAll() {
-  if (!confirm('모든 기록을 삭제하시겠습니까?')) return;
-  records = []; saveStorage(); renderTable(); renderChart(); renderDow();
+function resetSummary() {
   ['s-revenue','s-adspend','s-roas','s-cpa','s-aov','s-selfrate'].forEach(id => {
     const el = document.getElementById(id);
     el.textContent = '—'; el.style.color = '';
   });
   ['d-revenue','d-adspend','d-roas','d-cpa','d-aov','d-selfrate'].forEach(id =>
     document.getElementById(id).innerHTML = '');
+}
+
+function clearAll() {
+  if (!confirm('모든 기록을 삭제하시겠습니까?')) return;
+  records = []; saveStorage(); renderTable(); renderChart(); renderDow();
+  resetSummary();
 }
 
 function getFilteredRecords() {
@@ -1008,6 +1113,9 @@ function copyToSheet() {
 }
 
 // 초기화
+loadProducts();
+records = JSON.parse(localStorage.getItem(getStoreKey()) || '[]');
+renderProductTabs();
 renderTable();
 renderChart();
 if (records.length > 0) updateSummary(records[records.length - 1]);
